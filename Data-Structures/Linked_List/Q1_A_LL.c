@@ -227,6 +227,11 @@ int removeNode(LinkedList *ll, int index)
 
 	// 목표 위치 이전과 이후 노드를 찾습니다
 	// 목표 노드를 해제하고 링크를 다시 연결합니다
+	/*
+	10 20 30 40 일 때 30을 삭제하고자 한다면 Pre은 20.
+	cur = 30
+	pre->next(20)이 가르키는 다음 노드를 cur->next 즉 40을 가르키도록 함
+	*/
 	if ((pre = findNode(ll, index - 1)) != NULL)
 	{
 
