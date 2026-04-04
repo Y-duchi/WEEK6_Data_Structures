@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 
-/* CE1007/CZ1007 Data Structures
-Lab Test: Section A - Linked List Questions
-Purpose: Implementing the required functions for Question 4 */
+/* CE1007/CZ1007 데이터 구조
+랩 테스트: Section A - 연결 리스트 문제
+목적: 문제 4를 위한 필수 함수 구현 */
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -15,23 +15,22 @@ typedef struct _listnode
 {
 	int item;
 	struct _listnode *next;
-} ListNode;			// You should not change the definition of ListNode
+} ListNode; // ListNode의 정의를 변경하면 안 됩니다
 
 typedef struct _linkedlist
 {
 	int size;
 	ListNode *head;
-} LinkedList;			// You should not change the definition of LinkedList
+} LinkedList; // LinkedList의 정의를 변경하면 안 됩니다
 
+//////////////////////// 함수 프로토타입 /////////////////////////////////////
 
-//////////////////////// function prototypes /////////////////////////////////////
-
-// You should not change the prototype of this function
+// 이 함수의 프로토타입을 변경하면 안 됩니다
 void moveEvenItemsToBack(LinkedList *ll);
 
 void printList(LinkedList *ll);
 void removeAllItems(LinkedList *ll);
-ListNode * findNode(LinkedList *ll, int index);
+ListNode *findNode(LinkedList *ll, int index);
 int insertNode(LinkedList *ll, int index, int value);
 int removeNode(LinkedList *ll, int index);
 
@@ -42,10 +41,9 @@ int main()
 	LinkedList ll;
 	int c, i, j;
 	c = 1;
-	//Initialize the linked list 1 as an empty linked list
+	// 연결 리스트를 빈 연결 리스트로 초기화합니다
 	ll.head = NULL;
 	ll.size = 0;
-
 
 	printf("1: Insert an integer to the linked list:\n");
 	printf("2: Move all even integers to the back of the linked list:\n");
@@ -66,7 +64,7 @@ int main()
 			printList(&ll);
 			break;
 		case 2:
-			moveEvenItemsToBack(&ll); // You need to code this function
+			moveEvenItemsToBack(&ll); // 이 함수를 코드해야 합니다
 			printf("The resulting linked list after moving even integers to the back of the linked list is: ");
 			printList(&ll);
 			removeAllItems(&ll);
@@ -86,12 +84,32 @@ int main()
 
 void moveEvenItemsToBack(LinkedList *ll)
 {
-	/* add your code here */
+	/*  2, 3, 4, 7, 15, 18 -> 3,7,15,2,4,18 짝수들을 뒤로 옮기기 */
+	ListNode *cur;
+	int index = 0;
+	int s = ll->size;
+	cur = ll->head;
+
+	while(s) {
+		if (cur->item % 2 == 0) 
+		{
+			int value = cur->item;
+			cur = cur->next;
+			insertNode(ll, ll->size, value);
+			removeNode(ll, index);
+		} else 
+		{
+			cur = cur->next;
+			index ++;
+		}
+		s --;
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-void printList(LinkedList *ll){
+void printList(LinkedList *ll)
+{
 
 	ListNode *cur;
 	if (ll == NULL)
@@ -108,13 +126,13 @@ void printList(LinkedList *ll){
 	printf("\n");
 }
 
-
 void removeAllItems(LinkedList *ll)
 {
 	ListNode *cur = ll->head;
 	ListNode *tmp;
 
-	while (cur != NULL){
+	while (cur != NULL)
+	{
 		tmp = cur->next;
 		free(cur);
 		cur = tmp;
@@ -123,8 +141,8 @@ void removeAllItems(LinkedList *ll)
 	ll->size = 0;
 }
 
-
-ListNode *findNode(LinkedList *ll, int index){
+ListNode *findNode(LinkedList *ll, int index)
+{
 
 	ListNode *temp;
 
@@ -136,7 +154,8 @@ ListNode *findNode(LinkedList *ll, int index){
 	if (temp == NULL || index < 0)
 		return NULL;
 
-	while (index > 0){
+	while (index > 0)
+	{
 		temp = temp->next;
 		if (temp == NULL)
 			return NULL;
@@ -146,15 +165,17 @@ ListNode *findNode(LinkedList *ll, int index){
 	return temp;
 }
 
-int insertNode(LinkedList *ll, int index, int value){
+int insertNode(LinkedList *ll, int index, int value)
+{
 
 	ListNode *pre, *cur;
 
 	if (ll == NULL || index < 0 || index > ll->size + 1)
 		return -1;
 
-	// If empty list or inserting first node, need to update head pointer
-	if (ll->head == NULL || index == 0){
+	// 빈 리스트이거나 첫 번째 노드를 삽입하는 경우, head 포인터를 업데이트해야 합니다
+	if (ll->head == NULL || index == 0)
+	{
 		cur = ll->head;
 		ll->head = malloc(sizeof(ListNode));
 		ll->head->item = value;
@@ -163,10 +184,10 @@ int insertNode(LinkedList *ll, int index, int value){
 		return 0;
 	}
 
-
-	// Find the nodes before and at the target position
-	// Create a new node and reconnect the links
-	if ((pre = findNode(ll, index - 1)) != NULL){
+	// 목표 위치 이전의 노드를 찾습니다
+	// 새 노드를 생성하고 링크를 다시 연결합니다
+	if ((pre = findNode(ll, index - 1)) != NULL)
+	{
 		cur = pre->next;
 		pre->next = malloc(sizeof(ListNode));
 		pre->next->item = value;
@@ -178,17 +199,18 @@ int insertNode(LinkedList *ll, int index, int value){
 	return -1;
 }
 
-
-int removeNode(LinkedList *ll, int index){
+int removeNode(LinkedList *ll, int index)
+{
 
 	ListNode *pre, *cur;
 
-	// Highest index we can remove is size-1
+	// 제거할 수 있는 최대 인덱스는 size-1입니다
 	if (ll == NULL || index < 0 || index >= ll->size)
 		return -1;
 
-	// If removing first node, need to update head pointer
-	if (index == 0){
+	// 첫 번째 노드를 제거하는 경우, head 포인터를 업데이트해야 합니다
+	if (index == 0)
+	{
 		cur = ll->head->next;
 		free(ll->head);
 		ll->head = cur;
@@ -197,9 +219,10 @@ int removeNode(LinkedList *ll, int index){
 		return 0;
 	}
 
-	// Find the nodes before and after the target position
-	// Free the target node and reconnect the links
-	if ((pre = findNode(ll, index - 1)) != NULL){
+	// 목표 위치 이전과 이후 노드를 찾습니다
+	// 목표 노드를 해제하고 링크를 다시 연결합니다
+	if ((pre = findNode(ll, index - 1)) != NULL)
+	{
 
 		if (pre->next == NULL)
 			return -1;
