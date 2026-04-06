@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 
-/* CE1007/CZ1007 Data Structures
-Lab Test: Section C - Stack and Queue Questions
-Purpose: Implementing the required functions for Question 2 */
+/* CE1007/CZ1007 데이터 구조
+랩 테스트: Section C - 스택과 데주 문제
+목적: 문제 2를 위한 필수 함수 구현 */
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -16,32 +16,32 @@ typedef struct _listnode
 {
 	int item;
 	struct _listnode *next;
-} ListNode;	// You should not change the definition of ListNode
+} ListNode; // ListNode의 정의를 변경하면 안 됩니다
 
 typedef struct _linkedlist
 {
 	int size;
 	ListNode *head;
-} LinkedList;	// You should not change the definition of LinkedList
+} LinkedList; // LinkedList의 정의를 변경하면 안 됩니다
 
 typedef struct _stack
 {
 	LinkedList ll;
-}Stack;  // You should not change the definition of Stack
+} Stack; // Stack의 정의를 변경하면 안 됩니다
 
-///////////////////////// function prototypes ////////////////////////////////////
+///////////////////////// 함수 프로토타입 ////////////////////////////////////
 
-// You should not change the prototypes of these functions
-void createStackFromLinkedList(LinkedList *ll , Stack *stack);
+// 이 함수들의 프로토타입을 변경하면 안 됩니다
+void createStackFromLinkedList(LinkedList *ll, Stack *stack);
 void removeEvenValues(Stack *s);
 
-void push(Stack *s , int item);
+void push(Stack *s, int item);
 int pop(Stack *s);
 int isEmptyStack(Stack *s);
 void removeAllItemsFromStack(Stack *s);
 
 void printList(LinkedList *ll);
-ListNode * findNode(LinkedList *ll, int index);
+ListNode *findNode(LinkedList *ll, int index);
 int insertNode(LinkedList *ll, int index, int value);
 int removeNode(LinkedList *ll, int index);
 void removeAllItems(LinkedList *ll);
@@ -55,11 +55,11 @@ int main()
 	Stack s;
 
 	c = 1;
-	// Initialize the linked list as an empty linked list
+	// 연결 리스트를 빈 연결 리스트로 초기화합니다
 	ll.head = NULL;
 	ll.size = 0;
 
-	// Initalize the stack as an empty stack
+	// 스택을 빈 스택으로 초기화합니다
 	s.ll.head = NULL;
 	s.ll.size = 0;
 
@@ -83,12 +83,12 @@ int main()
 			printList(&ll);
 			break;
 		case 2:
-			createStackFromLinkedList(&ll, &s); // You need to code this function
+			createStackFromLinkedList(&ll, &s); // 이 함수를 코드해야 합니다
 			printf("The resulting stack is: ");
 			printList(&(s.ll));
 			break;
 		case 3:
-			removeEvenValues(&s); // You need to code this function
+			removeEvenValues(&s); // 이 함수를 코드해야 합니다
 			printf("The resulting stack after removing even integers is: ");
 			printList(&(s.ll));
 			removeAllItemsFromStack(&s);
@@ -102,23 +102,42 @@ int main()
 			printf("Choice unknown;\n");
 			break;
 		}
-
 	}
 
 	return 0;
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////
 
+// 스택에 리스트 넣기
 void createStackFromLinkedList(LinkedList *ll, Stack *s)
 {
-    /* add your code here */
+	/* top 이 헤드임
+	List = 1 2 3 이라면 추가시 4 1 2 3
+	삭제 시에도 헤드인 4먼저 나옴 -> 스택 만족
+	*/
+	removeAllItemsFromStack(s);
+
+	ListNode *cur;
+	cur = ll->head;
+	while(cur != NULL) {
+		push(s, cur->item);
+		cur = cur->next;
+	}
 }
 
+
+// 스택에서 짝수 제거
 void removeEvenValues(Stack *s)
 {
-	/* add your code here */
+	int size = s->ll.size;
+	for (int i=0; i<size;i++) {
+		int x = pop(s);
+		if (x % 2 != 0){
+			// 0번에 넣으면 계속 똑같은 값만 검사함, 홀수면 스택의 마지막에 넣여야함
+			insertNode(&(s->ll), s->ll.size, x);
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -149,7 +168,6 @@ int isEmptyStack(Stack *s)
 		return 0;
 }
 
-
 void removeAllItemsFromStack(Stack *s)
 {
 	if (s == NULL)
@@ -162,8 +180,8 @@ void removeAllItemsFromStack(Stack *s)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-
-void printList(LinkedList *ll){
+void printList(LinkedList *ll)
+{
 
 	ListNode *cur;
 	if (ll == NULL)
@@ -179,13 +197,13 @@ void printList(LinkedList *ll){
 	printf("\n");
 }
 
-
 void removeAllItems(LinkedList *ll)
 {
 	ListNode *cur = ll->head;
 	ListNode *tmp;
 
-	while (cur != NULL){
+	while (cur != NULL)
+	{
 		tmp = cur->next;
 		free(cur);
 		cur = tmp;
@@ -194,8 +212,8 @@ void removeAllItems(LinkedList *ll)
 	ll->size = 0;
 }
 
-
-ListNode * findNode(LinkedList *ll, int index){
+ListNode *findNode(LinkedList *ll, int index)
+{
 
 	ListNode *temp;
 
@@ -207,7 +225,8 @@ ListNode * findNode(LinkedList *ll, int index){
 	if (temp == NULL || index < 0)
 		return NULL;
 
-	while (index > 0){
+	while (index > 0)
+	{
 		temp = temp->next;
 		if (temp == NULL)
 			return NULL;
@@ -217,7 +236,8 @@ ListNode * findNode(LinkedList *ll, int index){
 	return temp;
 }
 
-int insertNode(LinkedList *ll, int index, int value){
+int insertNode(LinkedList *ll, int index, int value)
+{
 
 	ListNode *pre, *cur;
 
@@ -225,7 +245,8 @@ int insertNode(LinkedList *ll, int index, int value){
 		return -1;
 
 	// If empty list or inserting first node, need to update head pointer
-	if (ll->head == NULL || index == 0){
+	if (ll->head == NULL || index == 0)
+	{
 		cur = ll->head;
 		ll->head = malloc(sizeof(ListNode));
 		if (ll->head == NULL)
@@ -238,10 +259,10 @@ int insertNode(LinkedList *ll, int index, int value){
 		return 0;
 	}
 
-
 	// Find the nodes before and at the target position
 	// Create a new node and reconnect the links
-	if ((pre = findNode(ll, index - 1)) != NULL){
+	if ((pre = findNode(ll, index - 1)) != NULL)
+	{
 		cur = pre->next;
 		pre->next = malloc(sizeof(ListNode));
 		if (pre->next == NULL)
@@ -257,8 +278,8 @@ int insertNode(LinkedList *ll, int index, int value){
 	return -1;
 }
 
-
-int removeNode(LinkedList *ll, int index){
+int removeNode(LinkedList *ll, int index)
+{
 
 	ListNode *pre, *cur;
 
@@ -267,7 +288,8 @@ int removeNode(LinkedList *ll, int index){
 		return -1;
 
 	// If removing first node, need to update head pointer
-	if (index == 0){
+	if (index == 0)
+	{
 		cur = ll->head->next;
 		free(ll->head);
 		ll->head = cur;
@@ -277,7 +299,8 @@ int removeNode(LinkedList *ll, int index){
 
 	// Find the nodes before and after the target position
 	// Free the target node and reconnect the links
-	if ((pre = findNode(ll, index - 1)) != NULL){
+	if ((pre = findNode(ll, index - 1)) != NULL)
+	{
 
 		if (pre->next == NULL)
 			return -1;
