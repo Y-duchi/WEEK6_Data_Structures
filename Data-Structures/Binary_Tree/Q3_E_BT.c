@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 
-/* CE1007/CZ1007 Data Structures
-Lab Test: Section E - Binary Trees Questions
-Purpose: Implementing the required functions for Question 3 */
+/* CE1007/CZ1007 데이터 구조
+랩 테스트: Section E - 이진트리 문제
+목적: 문제 3을 위한 필수 함수 구현 */
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -15,7 +15,7 @@ typedef struct _btnode
     int item;
     struct _btnode *left;
     struct _btnode *right;
-} BTNode;   // You should not change the definition of BTNode
+} BTNode; // BTNode의 정의를 변경하면 안 됩니다
 
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -30,16 +30,16 @@ typedef struct _stack
     StackNode *top;
 } Stack;
 
-///////////////////////// function prototypes ////////////////////////////////////
+///////////////////////// 함수 프로토타입 ////////////////////////////////////
 
-// You should not change the prototypes of these functions
+// 이 함수들의 프로토타입을 변경하면 안 됩니다
 int countOneChildNodes(BTNode *node);
 
 BTNode *createBTNode(int item);
 
 BTNode *createTree();
-void push( Stack *stack, BTNode *node);
-BTNode* pop(Stack *stack);
+void push(Stack *stack, BTNode *node);
+BTNode *pop(Stack *stack);
 
 void printTree(BTNode *node);
 void removeAll(BTNode **node);
@@ -49,23 +49,22 @@ void removeAll(BTNode **node);
 int main()
 {
     char e;
-    int c,s;
+    int c, s;
     BTNode *root;
 
     c = 1;
     root = NULL;
 
-
     printf("1: Create a binary tree.\n");
     printf("2: Count the number of nodes that have exactly one child node.\n");
     printf("0: Quit;\n");
 
-    while(c != 0)
+    while (c != 0)
     {
         printf("Please input your choice(1/2/0): ");
-        if( scanf("%d",&c) > 0)
+        if (scanf("%d", &c) > 0)
         {
-            switch(c)
+            switch (c)
             {
             case 1:
                 removeAll(&root);
@@ -89,9 +88,8 @@ int main()
         }
         else
         {
-            scanf("%c",&e);
+            scanf("%c", &e);
         }
-
     }
     return 0;
 }
@@ -99,9 +97,24 @@ int main()
 //////////////////////////////////////////////////////////////////////////////////
 
 int countOneChildNodes(BTNode *node)
-
 {
-    /* add your code here */
+    /* 노드가 비어있는 경우 : 0
+        자식 노드가 둘 중 하나도 null 이라면 count ++
+    */
+
+    if (node == NULL) {
+        return 0;
+    }
+
+    // 자식이 하나일 때 count + 1 리턴
+    int count = 0;
+    if (node->left == NULL && node->right != NULL || node->left != NULL && node->right == NULL)
+    {
+        count = 1;
+    }
+
+    // 왼쪽 트리 오른쪽 트리 재귀호출, 리턴값 누적
+    return count + countOneChildNodes(node->left) + countOneChildNodes(node->right);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -117,7 +130,6 @@ BTNode *createBTNode(int item)
 
 //////////////////////////////////////////////////////////////////////////////////
 
-
 BTNode *createTree()
 {
     Stack stack;
@@ -129,57 +141,57 @@ BTNode *createTree()
     root = NULL;
     printf("Input an integer that you want to add to the binary tree. Any Alpha value will be treated as NULL.\n");
     printf("Enter an integer value for the root: ");
-    if(scanf("%d",&item) > 0)
+    if (scanf("%d", &item) > 0)
     {
         root = createBTNode(item);
-        push(&stack,root);
+        push(&stack, root);
     }
     else
     {
-        scanf("%c",&s);
+        scanf("%c", &s);
     }
 
-    while((temp =pop(&stack)) != NULL)
+    while ((temp = pop(&stack)) != NULL)
     {
 
         printf("Enter an integer value for the Left child of %d: ", temp->item);
 
-        if(scanf("%d",&item)> 0)
+        if (scanf("%d", &item) > 0)
         {
             temp->left = createBTNode(item);
         }
         else
         {
-            scanf("%c",&s);
+            scanf("%c", &s);
         }
 
         printf("Enter an integer value for the Right child of %d: ", temp->item);
-        if(scanf("%d",&item)>0)
+        if (scanf("%d", &item) > 0)
         {
             temp->right = createBTNode(item);
         }
         else
         {
-            scanf("%c",&s);
+            scanf("%c", &s);
         }
 
-        if(temp->right != NULL)
-            push(&stack,temp->right);
-        if(temp->left != NULL)
-            push(&stack,temp->left);
+        if (temp->right != NULL)
+            push(&stack, temp->right);
+        if (temp->left != NULL)
+            push(&stack, temp->left);
     }
     return root;
 }
 
-void push( Stack *stack, BTNode *node)
+void push(Stack *stack, BTNode *node)
 {
     StackNode *temp;
 
     temp = malloc(sizeof(StackNode));
-    if(temp == NULL)
+    if (temp == NULL)
         return;
     temp->btnode = node;
-    if(stack->top == NULL)
+    if (stack->top == NULL)
     {
         stack->top = temp;
         temp->next = NULL;
@@ -191,14 +203,14 @@ void push( Stack *stack, BTNode *node)
     }
 }
 
-BTNode* pop(Stack *stack)
+BTNode *pop(Stack *stack)
 {
     StackNode *temp, *top;
     BTNode *ptr;
     ptr = NULL;
 
     top = stack->top;
-    if(top != NULL)
+    if (top != NULL)
     {
         temp = top->next;
         ptr = top->btnode;
@@ -212,16 +224,17 @@ BTNode* pop(Stack *stack)
 
 void printTree(BTNode *node)
 {
-    if(node == NULL) return;
+    if (node == NULL)
+        return;
 
     printTree(node->left);
-    printf("%d ",node->item);
+    printf("%d ", node->item);
     printTree(node->right);
 }
 
 void removeAll(BTNode **node)
 {
-    if(*node != NULL)
+    if (*node != NULL)
     {
         removeAll(&((*node)->left));
         removeAll(&((*node)->right));
@@ -229,4 +242,3 @@ void removeAll(BTNode **node)
         *node = NULL;
     }
 }
-
