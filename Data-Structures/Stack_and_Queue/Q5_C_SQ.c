@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 
-/* CE1007/CZ1007 Data Structures
-Lab Test: Section C - Stack and Queue Questions
-Purpose: Implementing the required functions for Question 5 */
+/* CE1007/CZ1007 데이터 구조
+랩 테스트: Section C - 스택과 데주 문제
+목적: 문제 5를 위한 필수 함수 구현 */
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -15,26 +15,25 @@ typedef struct _listnode
 {
 	int item;
 	struct _listnode *next;
-} ListNode;	// You should not change the definition of ListNode
+} ListNode; // ListNode의 정의를 변경하면 안 됩니다
 
 typedef struct _linkedlist
 {
 	int size;
 	ListNode *head;
-} LinkedList;	// You should not change the definition of LinkedList
-
+} LinkedList; // LinkedList의 정의를 변경하면 안 됩니다
 
 typedef struct _queue
 {
 	LinkedList ll;
-} Queue;  // You should not change the definition of Queue
+} Queue; // Queue의 정의를 변경하면 안 됩니다
 
-///////////////////////// function prototypes ////////////////////////////////////
+///////////////////////// 함수 프로토타입 ////////////////////////////////////
 
-// You should not change the prototypes of these functions
+// 이 함수의 프로토타입을 변경하면 안 됩니다
 void recursiveReverse(Queue *q);
 
-// You may use the following functions or you may write your own
+// 다음 함수를 사용할 수도 있고 자신의 함수를 쓸 수도 있습니다
 void enqueue(Queue *q, int item);
 int dequeue(Queue *q);
 int isEmptyQueue(Queue *q);
@@ -42,7 +41,7 @@ void removeAllItemsFromQueue(Queue *q);
 
 void printList(LinkedList *ll);
 void removeAllItems(LinkedList *ll);
-ListNode * findNode(LinkedList *ll, int index);
+ListNode *findNode(LinkedList *ll, int index);
 int insertNode(LinkedList *ll, int index, int value);
 int removeNode(LinkedList *ll, int index);
 
@@ -56,19 +55,17 @@ int main()
 
 	c = 1;
 
-	// Initialize the linked list as an empty linked list
+	// 연결 리스트를 빈 연결 리스트로 초기화합니다
 	ll.head = NULL;
 	ll.size = 0;
 
-	// Initialize the Queue as an empty queue
+	// 데주를 빈 데주로 초기화합니다
 	q.ll.head = NULL;
 	q.ll.size = 0;
-
 
 	printf("1: Insert an integer into the Queue:\n");
 	printf("2: Recursively reverse the queue;\n");
 	printf("0: Quit:\n");
-
 
 	while (c != 0)
 	{
@@ -85,7 +82,7 @@ int main()
 			printList(&q.ll);
 			break;
 		case 2:
-			recursiveReverse(&q); // You need to code this function
+			recursiveReverse(&q); // 이 함수를 코드해야 합니다
 			printf("The resulting reversed queue is: ");
 			printList(&(q.ll));
 			removeAllItemsFromQueue(&q);
@@ -99,7 +96,6 @@ int main()
 			printf("Choice unknown;\n");
 			break;
 		}
-
 	}
 
 	return 0;
@@ -109,7 +105,15 @@ int main()
 
 void recursiveReverse(Queue *q)
 {
-/* add your code here */
+	/* 재귀를 사용해서 큐에 저장된 항목의 순서를 역순으로 정렬 */
+	// basecase null을 만나면 반환 시작
+	if (q->ll.head == NULL) {
+		return;
+	}
+	int x = dequeue(q);
+	recursiveReverse(q);
+	enqueue(q, x);
+
 }
 
 //////////////////////////////////////////////////////////////////
@@ -131,7 +135,8 @@ void removeAllItems(LinkedList *ll)
 	ListNode *cur = ll->head;
 	ListNode *tmp;
 
-	while (cur != NULL){
+	while (cur != NULL)
+	{
 		tmp = cur->next;
 		free(cur);
 		cur = tmp;
@@ -142,14 +147,17 @@ void removeAllItems(LinkedList *ll)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void enqueue(Queue *q, int item) {
+void enqueue(Queue *q, int item)
+{
 	insertNode(&(q->ll), q->ll.size, item);
 }
 
-int dequeue(Queue *q) {
+int dequeue(Queue *q)
+{
 	int item;
 
-	if (!isEmptyQueue(q)) {
+	if (!isEmptyQueue(q))
+	{
 		item = ((q->ll).head)->item;
 		removeNode(&(q->ll), 0);
 		return item;
@@ -157,13 +165,15 @@ int dequeue(Queue *q) {
 	return -1;
 }
 
-int isEmptyQueue(Queue *q) {
+int isEmptyQueue(Queue *q)
+{
 	if ((q->ll).size == 0)
 		return 1;
 	return 0;
 }
 
-void printList(LinkedList *ll){
+void printList(LinkedList *ll)
+{
 
 	ListNode *cur;
 	if (ll == NULL)
@@ -179,7 +189,8 @@ void printList(LinkedList *ll){
 	printf("\n");
 }
 
-ListNode * findNode(LinkedList *ll, int index){
+ListNode *findNode(LinkedList *ll, int index)
+{
 
 	ListNode *temp;
 
@@ -191,7 +202,8 @@ ListNode * findNode(LinkedList *ll, int index){
 	if (temp == NULL || index < 0)
 		return NULL;
 
-	while (index > 0){
+	while (index > 0)
+	{
 		temp = temp->next;
 		if (temp == NULL)
 			return NULL;
@@ -201,7 +213,8 @@ ListNode * findNode(LinkedList *ll, int index){
 	return temp;
 }
 
-int insertNode(LinkedList *ll, int index, int value){
+int insertNode(LinkedList *ll, int index, int value)
+{
 
 	ListNode *pre, *cur;
 
@@ -209,7 +222,8 @@ int insertNode(LinkedList *ll, int index, int value){
 		return -1;
 
 	// If empty list or inserting first node, need to update head pointer
-	if (ll->head == NULL || index == 0){
+	if (ll->head == NULL || index == 0)
+	{
 		cur = ll->head;
 		ll->head = malloc(sizeof(ListNode));
 		if (ll->head == NULL)
@@ -222,10 +236,10 @@ int insertNode(LinkedList *ll, int index, int value){
 		return 0;
 	}
 
-
 	// Find the nodes before and at the target position
 	// Create a new node and reconnect the links
-	if ((pre = findNode(ll, index - 1)) != NULL){
+	if ((pre = findNode(ll, index - 1)) != NULL)
+	{
 		cur = pre->next;
 		pre->next = malloc(sizeof(ListNode));
 		if (pre->next == NULL)
@@ -241,8 +255,8 @@ int insertNode(LinkedList *ll, int index, int value){
 	return -1;
 }
 
-
-int removeNode(LinkedList *ll, int index){
+int removeNode(LinkedList *ll, int index)
+{
 
 	ListNode *pre, *cur;
 
@@ -251,7 +265,8 @@ int removeNode(LinkedList *ll, int index){
 		return -1;
 
 	// If removing first node, need to update head pointer
-	if (index == 0){
+	if (index == 0)
+	{
 		cur = ll->head->next;
 		free(ll->head);
 		ll->head = cur;
@@ -261,7 +276,8 @@ int removeNode(LinkedList *ll, int index){
 
 	// Find the nodes before and after the target position
 	// Free the target node and reconnect the links
-	if ((pre = findNode(ll, index - 1)) != NULL){
+	if ((pre = findNode(ll, index - 1)) != NULL)
+	{
 
 		if (pre->next == NULL)
 			return -1;
